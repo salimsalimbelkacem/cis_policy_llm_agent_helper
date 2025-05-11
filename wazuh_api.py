@@ -1,6 +1,7 @@
 #!/home/salim/.venv/bin/python3
 
 import requests
+import json
 
 api_url  = "10.0.3.230"
 username = "wazuh-wui"
@@ -18,15 +19,14 @@ def authenticate( username:str=username, password:str=password, url:str=api_url,
 
 token = authenticate()
 
-def get_( url:str=api_url, port:int=port, token:str=token, suffix:str=""):
+def get_(  suffix:str, url:str=api_url, port:int=port, token:str=token):
     agents_url = f"https://{url}:{port}/{suffix}"
     response = requests.get( url=agents_url, headers={ "Authorization" : f"Bearer {token}" }, verify=False )
-
     if response.status_code == 200:
-        return response.content.decode()
+        return json.loads(response.content.decode())
     else:
         print("request failed:", response.text)
-        return ""
+
 
 def get_agents( url:str=api_url, port:int=port, token:str=token):
     return get_(url=url, port=port, suffix="agents", token=token)
@@ -37,11 +37,3 @@ def get_policy_checks( agent_id:str, policy_id:str, url:str=api_url, port:int=po
 def get_sca_database( agent_id:str, url:str=api_url, port:int=port, token:str=token ):
     return get_(url=url, port=port, suffix=f"sca/{agent_id}?pretty=true", token=token)
 
-print(token)
-
-"""
-Pour définir votre token d'authentification : TOKEN=$(curl -u wazuh-wui:Password -k -X POST "https://IP:55000/security/user/authenticate?raw=true")
-Pour tester la connectivité : curl -k -X GET "https://IP:55000/" -H "Authorization: Bearer $TOKEN"
-Pour récuperer la liste des agents et leurs ID : curl -k -X GET "https://IP:55000/agents" -H  "Authorization: Bearer $TOKEN"
-Pour récuperer le résultat de compliance depuis Wazuh : curl -k -X GET "https://IP:55000/sca/[agentID]/checks/cis_win2016?" -H  "Authorization: Bearer $TOKEN" -o result.txt
-"""

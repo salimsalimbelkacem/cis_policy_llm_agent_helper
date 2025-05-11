@@ -2,7 +2,12 @@
 
 import requests
 
-def authenticate( username:str, password:str, url:str, port:int):
+api_url  = "10.0.3.230"
+username = "wazuh-wui"
+password = "Oe9lSJE4kNjs9aBV*dADDkNoArmE+rIz"
+port     = 55000
+
+def authenticate( username:str=username, password:str=password, url:str=api_url, port:int=port):
     auth_url = f"https://{url}:{port}/security/user/authenticate?raw=true"
     response = requests.post(auth_url, auth=(username, password), verify=False)
     if response.status_code == 200:
@@ -11,7 +16,9 @@ def authenticate( username:str, password:str, url:str, port:int):
         print("Authentication failed:", response.text)
         return ""
 
-def get_( url:str, port:int, token:str | None, suffix:str=""):
+token = authenticate()
+
+def get_( url:str=api_url, port:int=port, token:str=token, suffix:str=""):
     agents_url = f"https://{url}:{port}/{suffix}"
     response = requests.get( url=agents_url, headers={ "Authorization" : f"Bearer {token}" }, verify=False )
 
@@ -21,22 +28,16 @@ def get_( url:str, port:int, token:str | None, suffix:str=""):
         print("request failed:", response.text)
         return ""
 
-def get_agents( url:str, port:int, token:str):
+def get_agents( url:str=api_url, port:int=port, token:str=token):
     return get_(url=url, port=port, suffix="agents", token=token)
 
-def get_compliance( url:str, port:int, token:str, agent_id:str, compliace:str):
-    return get_(url=url, port=port, suffix=f"sca/{agent_id}/checks/{compliace}", token=token)
+def get_policy_checks( agent_id:str, policy_id:str, url:str=api_url, port:int=port, token:str=token ):
+    return get_(url=url, port=port, suffix=f"sca/{agent_id}/checks/{policy_id}", token=token)
 
-api_url  = "10.0.3.230"
-username = "wazuh-wui"
-password = "Oe9lSJE4kNjs9aBV*dADDkNoArmE+rIz"
-port     = 55000
-
-token = authenticate(url=api_url, username=username, password=password, port=port)
+def get_sca_database( agent_id:str, url:str=api_url, port:int=port, token:str=token ):
+    return get_(url=url, port=port, suffix=f"sca/{agent_id}?pretty=true", token=token)
 
 print(token)
-
-print(get_agents(url=api_url, port=port, token=token))
 
 """
 Pour définir votre token d'authentification : TOKEN=$(curl -u wazuh-wui:Password -k -X POST "https://IP:55000/security/user/authenticate?raw=true")

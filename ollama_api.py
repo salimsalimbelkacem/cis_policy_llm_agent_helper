@@ -1,11 +1,8 @@
-#!/bin/python
-# curl "10.0.3.230:11434/api/generate" -d '{"model":"deepseek-r1:1.5b", "prompt":"i will feed you cis policy checks logs from wazuh ok?"}'
 import requests
 import json
-from time import sleep
 
-ollama_api_url="localhost"
-model="deepseek-r1:1.5b"
+ollama_api_url="10.0.3.230"
+model="deepseek-r1:7b"
 port=11434
 
 def ollama_post_(data:dict, suffix:str, url:str=ollama_api_url, port:int=port):
@@ -16,8 +13,8 @@ def ollama_post_(data:dict, suffix:str, url:str=ollama_api_url, port:int=port):
     else:
         print("request failed:", response.text)
 
-def post_generate(prompt:str, url:str=ollama_api_url, port:int=port):
-    response = ollama_post_(data={"model":model, "prompt":prompt}, suffix="api/generate", url=url, port=port)
+def _generate(prompt:str):
+    response = ollama_post_({"model":model, "prompt":prompt}, "api/generate")
     if response:
         full_response = ""
         for line in response.iter_lines():
@@ -29,7 +26,6 @@ def post_generate(prompt:str, url:str=ollama_api_url, port:int=port):
                         full_response += chunk["response"]
                 except json.JSONDecodeError:
                     print("Error decoding JSON chunk:", line)
+        print("")
         return full_response
     return None
-
-post_generate("if 1+1 is 2 why 2+2 is not 1?")

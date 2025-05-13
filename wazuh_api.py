@@ -2,6 +2,8 @@
 
 import requests
 import json
+import urllib3
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 api_url  = "10.0.3.230"
 username = "wazuh-wui"
@@ -19,21 +21,22 @@ def authenticate( username:str=username, password:str=password, url:str=api_url,
 
 token = authenticate()
 
-def get_(  suffix:str, url:str=api_url, port:int=port, token:str=token):
+def get_(  suffix:str, url:str=api_url, port:int=port, token:str=token) -> list[dict]:
     agents_url = f"https://{url}:{port}/{suffix}"
     response = requests.get( url=agents_url, headers={ "Authorization" : f"Bearer {token}" }, verify=False )
     if response.status_code == 200:
-        return json.loads(response.content.decode())
+        return json.loads(response.content.decode())["data"]["affected_items"]
     else:
         print("request failed:", response.text)
+        return [{}]
 
 
-def get_agents( url:str=api_url, port:int=port, token:str=token):
+def get_agents( url:str=api_url, port:int=port, token:str=token) -> list[dict]:
     return get_(url=url, port=port, suffix="agents", token=token)
 
-def get_policy_checks( agent_id:str, policy_id:str, url:str=api_url, port:int=port, token:str=token ):
+def get_policy_checks( agent_id:str, policy_id:str, url:str=api_url, port:int=port, token:str=token ) -> list[dict]:
     return get_(url=url, port=port, suffix=f"sca/{agent_id}/checks/{policy_id}", token=token)
 
-def get_sca_database( agent_id:str, url:str=api_url, port:int=port, token:str=token ):
+def get_sca_database( agent_id:str, url:str=api_url, port:int=port, token:str=token ) -> list[dict]:
     return get_(url=url, port=port, suffix=f"sca/{agent_id}?pretty=true", token=token)
 

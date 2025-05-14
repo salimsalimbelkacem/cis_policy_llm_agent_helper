@@ -2,7 +2,7 @@ import requests
 import json
 
 ollama_api_url="10.0.3.230"
-model="deepseek-r1:7b"
+model="deepseek-r1:8b"
 port=11434
 
 def ollama_post_(data:dict, suffix:str, url:str=ollama_api_url, port:int=port):
@@ -13,7 +13,7 @@ def ollama_post_(data:dict, suffix:str, url:str=ollama_api_url, port:int=port):
     else:
         print("request failed:", response.text)
 
-def _generate(prompt:str):
+def _generate(prompt:str) -> str:
     response = ollama_post_({"model":model, "prompt":prompt}, "api/generate")
     if response:
         full_response = ""
@@ -28,4 +28,4 @@ def _generate(prompt:str):
                     print("Error decoding JSON chunk:", line)
         print("")
         return full_response
-    return None
+    return ""

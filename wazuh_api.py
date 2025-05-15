@@ -1,5 +1,3 @@
-#!/home/salim/.venv/bin/python3
-
 import requests
 import json
 import urllib3
@@ -10,7 +8,14 @@ username = "wazuh-wui"
 password = "Oe9lSJE4kNjs9aBV*dADDkNoArmE+rIz"
 port     = 55000
 
-def authenticate( username:str=username, password:str=password, url:str=api_url, port:int=port):
+# send post request for authentication, returns string token
+def authenticate(
+        username:str=username,
+        password:str=password,
+        url:str=api_url,
+        port:int=port
+        ) -> str:
+
     auth_url = f"https://{url}:{port}/security/user/authenticate?raw=true"
     response = requests.post(auth_url, auth=(username, password), verify=False)
     if response.status_code == 200:
@@ -21,7 +26,14 @@ def authenticate( username:str=username, password:str=password, url:str=api_url,
 
 token = authenticate()
 
-def get_(  suffix:str, url:str=api_url, port:int=port, token:str=token) -> list[dict]:
+# send get request to the wazuh api with authentication token in the header
+def get_(
+        suffix:str,
+        url:str=api_url,
+        port:int=port,
+        token:str=token
+        ) -> list[dict]:
+
     agents_url = f"https://{url}:{port}/{suffix}"
     response = requests.get( url=agents_url, headers={ "Authorization" : f"Bearer {token}" }, verify=False )
     if response.status_code == 200:
@@ -31,12 +43,35 @@ def get_(  suffix:str, url:str=api_url, port:int=port, token:str=token) -> list[
         return [{}]
 
 
-def get_agents( url:str=api_url, port:int=port, token:str=token) -> list[dict]:
+# gets list of agents with informations, returns list of objects
+def get_agents(
+        url:str=api_url,
+        port:int=port,
+        token:str=token
+        ) -> list[dict]:
+
     return get_(url=url, port=port, suffix="agents", token=token)
 
-def get_policy_checks( agent_id:str, policy_id:str, url:str=api_url, port:int=port, token:str=token ) -> list[dict]:
+
+# get list of all the cis policy checks, returns list of objects
+def get_policy_checks(
+        agent_id:str,
+        policy_id:str,
+        url:str=api_url,
+        port:int=port,
+        token:str=token 
+        ) -> list[dict]:
+
     return get_(url=url, port=port, suffix=f"sca/{agent_id}/checks/{policy_id}", token=token)
 
-def get_sca_database( agent_id:str, url:str=api_url, port:int=port, token:str=token ) -> list[dict]:
-    return get_(url=url, port=port, suffix=f"sca/{agent_id}?pretty=true", token=token)
+
+# get the sca database from agent, returns object?
+def get_agent_sca_database(
+        agent_id:str,
+        url:str=api_url,
+        port:int=port,
+        token:str=token 
+        ) -> list[dict]:
+
+    return get_(url=url, port=port, suffix=f"sca/{agent_id}", token=token)
 

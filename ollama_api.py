@@ -72,4 +72,4 @@ def generate(prompt:str):
     file.close()
 
     return response
-
+# request failed: {"error":"json: cannot unmarshal array into Go struct field GenerateRequest.context of type int"}

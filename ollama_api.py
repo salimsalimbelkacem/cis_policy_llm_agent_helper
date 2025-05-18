@@ -26,12 +26,12 @@ def ollama_post_(
 def invoke(
         prompt:		str,
         suffix:		str = "",
-        format:		str = "",
         system:		str = "",
         template:	str = "",
         options:	dict | None = None,
         # how do i insert context
         context:	list | None = None,
+        format:		str = "json",
         keep_alive:	str = "5m",
         stream:		bool = False,
         ):
@@ -54,22 +54,22 @@ import json
 import os
 
 
-def generate(prompt:str):
+def generate(prompt:str, system:str|None = None):
 
     if os.path.exists(".context"):
-        print("bech tchouf")
         file = open(mode="r", file=".context")
-        context = '{"context":['+file.read()+']}'
+        context = '{"context":'+file.read()+'}'
         file.close()
+
     else:
         context = '{"context":[]}'
 
-
-    response = invoke(prompt, context = json.loads(context)["context"])
+    response = invoke(prompt, context = json.loads(context, system=system or "")["context"])
 
     file = open(mode="w", file=".context")
     file.write(f"{response['context']}")
     file.close()
 
     return response
+
 # request failed: {"error":"json: cannot unmarshal array into Go struct field GenerateRequest.context of type int"}

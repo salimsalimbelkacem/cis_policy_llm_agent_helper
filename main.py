@@ -8,17 +8,18 @@ def filter_policy_checks(agent_id:str, policy_id:str) -> list[dict]:
 
 
 def generate_from_one_policy_checks(policy_check:dict) -> str:
+    print("semantic search extraction")
     context = raaaaag.semantic_search(policy_check["title"])
 
-    prompt = f"give me the powershell commands to remidiate this with no details\n\
-            {policy_check}\ncontext: {context}"
+    prompt = f"give me the powershell commands to remidiate this cis policy with little details\n" +\
+    f"{policy_check}\ncontext: {context}"
 
+    print("generation")
     response = ollama_api.invoke(prompt)
 
+    print(response)
+
     raaaaag.store_message("remidiation response", prompt, response)
-
-    print(response["response"])
-
     return response
 
 
@@ -36,20 +37,20 @@ def generate_from_all_policy_checks(agent_id:str, policy_id:str):
     open("policy_checks_output", "a")
 
 
-def generate_from_agents_list():
-    agents_list = wazuh_api.get_agents()
-    return ollama_api.invoke(
-            f"this is the list of agents conected to the wazuh server\
-                    \n{agents_list}"
-                    )
-
-
-def generate_from_sca_database(agent_id:str):
-    sca_database = wazuh_api.get_agent_sca_database(agent_id)
-    return ollama_api.invoke(
-            f"this is the sca database of the agent numbered {agent_id}\
-                    \n{sca_database}"
-                    )
+# def generate_from_agents_list():
+#     agents_list = wazuh_api.get_agents()
+#     return ollama_api.invoke(
+#             f"this is the list of agents conected to the wazuh server" +
+#                     "\n{agents_list}"
+#                     )
+#
+#
+# def generate_from_sca_database(agent_id:str):
+#     sca_database = wazuh_api.get_agent_sca_database(agent_id)
+#     return ollama_api.invoke(
+#             f"this is the sca database of the agent numbered {agent_id}\
+#                     \n{sca_database}"
+#                     )
 
 
 def init_deepseek():
@@ -66,7 +67,7 @@ def init_deepseek():
     with open("./Windows Server 2022 Baseline.ps1", "r") as file:
         chunks = file.read().split("\n\n#########################################################")
 
-        for i, chunk in enumerate(chunks):
-            ollama_api.invoke(
-                    f"Feeding data chunk {i + 1}: Please store this for later use.\n\n{chunk}"
-                    )
+    for i, chunk in enumerate(chunks):
+        ollama_api.invoke(
+                f"Feeding data chunk {i + 1}: Please store this for later use.\n\n{chunk}"
+                )

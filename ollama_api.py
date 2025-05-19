@@ -31,7 +31,7 @@ def invoke(
         options:	dict | None = None,
         # how do i insert context
         context:	list | None = None,
-        format:		str = "json",
+        format:		str = "",
         keep_alive:	str = "5m",
         stream:		bool = False,
         ):
@@ -54,7 +54,7 @@ import json
 import os
 
 
-def generate(prompt:str, system:str|None = None):
+def generate(prompt:str):
 
     if os.path.exists(".context"):
         file = open(mode="r", file=".context")
@@ -64,7 +64,7 @@ def generate(prompt:str, system:str|None = None):
     else:
         context = '{"context":[]}'
 
-    response = invoke(prompt, context = json.loads(context, system=system or "")["context"])
+    response = invoke(prompt, context = json.loads(context)["context"])
 
     file = open(mode="w", file=".context")
     file.write(f"{response['context']}")

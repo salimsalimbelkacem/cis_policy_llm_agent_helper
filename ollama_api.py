@@ -25,28 +25,31 @@ def ollama_post_(
 
 def invoke(
         prompt:		str,
-        suffix:		str = "",
-        system:		str = "",
-        template:	str = "",
-        options:	dict | None = None,
-        # how do i insert context
         context:	list | None = None,
-        format:		str = "",
-        keep_alive:	str = "5m",
         stream:		bool = False,
+
+        # suffix:		str = "",
+        # system:		str = "",
+        # template:	str = "",
+        # options:	dict | None = None,
+        # how do i insert context
+        # format:		str = "",
+        # keep_alive:	str = "5m",
         ):
 
+    print("generating")
     return ollama_post_({
         "model": llm_model,
         "prompt": prompt,
-        "suffix": suffix,
-        "format": format,
-        "options": options or {},
-        "system": system,
-        "template": template,
         "context": context or [],
         "stream": stream,
-        "keep_alive": keep_alive,
+
+        # "suffix": suffix,
+        # "format": format,
+        # "options": options or {},
+        # "system": system,
+        # "template": template,
+        # "keep_alive": keep_alive,
         }, "api/generate").json()
 
 
@@ -72,4 +75,3 @@ def generate(prompt:str):
 
     return response
 
-# request failed: {"error":"json: cannot unmarshal array into Go struct field GenerateRequest.context of type int"}

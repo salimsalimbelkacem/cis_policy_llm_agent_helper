@@ -9,12 +9,13 @@ def filter_policy_checks(agent_id:str, policy_id:str) -> list[dict]:
 
 def generate_from_one_policy_checks(policy_check:dict) -> str:
     print("semantic search extraction")
-    context = raaaaag.semantic_search(policy_check["title"] + policy_check["policy_id"])
+    context = raaaaag.retrieve_for_llm (
+            policy_check["title"] + policy_check["policy_id"]
+            )
 
-    prompt = f"give me the powershell commands to remidiate this cis policy with little details\n" +\
+    prompt = f"explain what does this policy check mean in simple words then give me detailed steps to follow that are required for remidiation in bullet points" +\
     f"{policy_check}\ncontext: {context}"
 
-    print("generation")
     response = ollama_api.invoke(prompt)
 
     print(response['response'].split("</think>")[1])
@@ -23,7 +24,7 @@ def generate_from_one_policy_checks(policy_check:dict) -> str:
     return response
 
 
-def generate_from_all_policy_checks(agent_id:str, policy_id:str):
+def generate_from_all_policy_checks(agent_id:str="003", policy_id:str="cis_win2022"):
     policy_checks = filter_policy_checks(agent_id, policy_id)
     file = open("policy_checks_output", "a")
 
@@ -32,7 +33,7 @@ def generate_from_all_policy_checks(agent_id:str, policy_id:str):
         print(title)
 
         file.write(title+"\n")
-        file.write(f"{generate_from_one_policy_checks(check)}" + "\n\n------\n")
+        file.write(f"{generate_from_one_policy_checks(check)['response'].split('</think>')[1]}" + "\n\n------\n")
 
     open("policy_checks_output", "a")
 
@@ -53,31 +54,31 @@ def generate_from_all_policy_checks(agent_id:str, policy_id:str):
 #                     )
 
 
-def feed_file(file):
-    with open( file, "r" ) as file:
-        chunks = file.read().split("\n\n#########################################################")
-
-    for i, chunk in enumerate(chunks):
-        print(f"chunk {i}")
-        prompt = f"Feeding data chunk {i + 1}: Please store this for later use.\n\n{chunk}"
-        response = ollama_api.invoke(prompt)["response"]
-
-        print(f"storing in rag")
-        raaaaag.store_message("feeding", prompt, response.split("</think>")[1])
-
-def init_deepseek():
-    print("Step 1: Initialization Message")
-    prompt = "You are an assistant specialized in CIS benchmark remediations." +\
-            "I will feed you remediation scripts in chunks related to various CIS benchmarks." +\
-            "Later, I will provide JSON-formatted CIS policy check results from Wazuh." +\
-            "Your task will be to read those JSON inputs and return the appropriate remediation steps." +\
-            "For now, acknowledge and rephrase your understanding of this task to confirm."
-
-    response:str = ollama_api.invoke(prompt)['response']
-    print(response)
-
-    raaaaag.store_message("feeding", prompt, response.split("</think>")[1])
-
-    print("Step 2: Feeding Remediation Script Chunks")
-    feed_file("./Windows Server 2022 Baseline.ps1")
-
+# def feed_file(file):
+#     with open( file, "r" ) as file:
+#         chunks = file.read().split("\n\n#########################################################")
+#
+#     for i, chunk in enumerate(chunks):
+#         print(f"chunk {i}")
+#         prompt = f"Feeding data chunk {i + 1}: Please store this for later use.\n\n{chunk}"
+#         response = ollama_api.invoke(prompt)["response"]
+#
+#         print(f"storing in rag")
+#         raaaaag.store_message("feeding", prompt, response.split("</think>")[1])
+#
+# def init_deepseek():
+#     print("Step 1: Initialization Message")
+#     prompt = "You are an assistant specialized in CIS benchmark remediations." +\
+#             "I will feed you remediation scripts in chunks related to various CIS benchmarks." +\
+#             "Later, I will provide JSON-formatted CIS policy check results from Wazuh." +\
+#             "Your task will be to read those JSON inputs and return the appropriate remediation steps." +\
+#             "For now, acknowledge and rephrase your understanding of this task to confirm."
+#
+#     response:str = ollama_api.invoke(prompt)['response']
+#     print(response)
+#
+#     raaaaag.store_message("feeding", prompt, response.split("</think>")[1])
+#
+#     print("Step 2: Feeding Remediation Script Chunks")
+#     feed_file("./Windows Server 2022 Baseline.ps1")
+#

@@ -3,11 +3,11 @@ import ollama_api
 import raaaaag
 
 
-def filter_policy_checks(agent_id:str, policy_id:str) -> list[dict]:
-    return [ elem for elem in wazuh_api.get_policy_checks( agent_id, policy_id ) if elem["result"]!="passed" ]
+# def filter_policy_checks(agent_id:str, policy_id:str) -> list[dict]:
+#     return [ elem for elem in wazuh_api.get_policy_checks( agent_id, policy_id ) if elem["result"]!="passed" ]
 
 
-def generate_from_one_policy_checks(policy_check:dict) -> str:
+def generate_from_one_policy_checks(policy_check:dict):
     print("semantic search extraction")
     context = raaaaag.retrieve_for_llm (
             policy_check["title"] + policy_check["policy_id"]
@@ -25,7 +25,7 @@ def generate_from_one_policy_checks(policy_check:dict) -> str:
 
 
 def generate_from_all_policy_checks(agent_id:str="003", policy_id:str="cis_win2022"):
-    policy_checks = filter_policy_checks(agent_id, policy_id)
+    policy_checks = wazuh_api.get_policy_checks(agent_id, policy_id)
     file = open("policy_checks_output", "a")
 
     for check in policy_checks:

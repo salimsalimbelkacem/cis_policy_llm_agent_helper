@@ -1,4 +1,3 @@
-#!/home/salim/.venv/bin/python3
 import chromadb
 import ollama_api
 import time

@@ -2,23 +2,24 @@ import requests
 import json
 import urllib3
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+import tomllib
 
-api_url  = "10.0.3.230"
-username = "wazuh-wui"
-password = "Oe9lSJE4kNjs9aBV*dADDkNoArmE+rIz"
-port     = 55000
+with open("../config.toml", "rb") as config_file:
+    configs = tomllib.load(config_file)['wazuh']
+
 
 def post_authenticate(
-        username:str=username,
-        password:str=password,
-        url:str=api_url,
-        port:int=port
+        username:str=configs['username'],
+        password:str=configs['password'],
+        url:str=configs['api_url'],
+        port:int=configs['port']
         ) -> str:
     """
 send post request for authentication, returns string token
     """
     auth_url = f"https://{url}:{port}/security/user/authenticate?raw=true"
     response = requests.post(auth_url, auth=(username, password), verify=False)
+
     if response.status_code == 200:
         return response.content.decode()
     else:
@@ -30,8 +31,8 @@ token = post_authenticate()
 def get_(
         suffix:str,
         options:str = "",
-        url:str=api_url,
-        port:int=port,
+        url:str=configs['api_url'],
+        port:int=configs['port'],
         token:str=token
         ) -> list[dict]:
     """
@@ -47,8 +48,8 @@ send get request to the wazuh api with authentication token in the header
 
 
 def get_agents(
-        url:str=api_url,
-        port:int=port,
+        url:str=configs['api_url'],
+        port:int=configs['port'],
         token:str=token,
 
          status:str|None=None,
@@ -60,7 +61,7 @@ gets list of agents with informations, returns list of objects
     """
     return get_(
             url=url,
-            port=port,
+            port=configs['port'],
             suffix="agents",
             token=token,
             options=(f"status={status}&" if status else "") +
@@ -71,7 +72,7 @@ gets list of agents with informations, returns list of objects
 
 def get_policy_checks(
         agent_id:str, policy_id:str,
-        url:str=api_url, port:int=port,
+        url:str=configs['api_url'], port:int=configs['port'],
         token:str=token,
         result: str|None = None,
         select: str|None = None,
@@ -91,7 +92,7 @@ get list of all the cis policy checks, returns list of objects
 :param options: additional options from the [wazuh api documentation](https://documentation.wazuh.com/current/user-manual/api/reference.html#operation/api.controllers.sca_controller.get_sca_checks) can be added separated with `&`
     """
     return get_(
-            url=url, port=port,
+            url=url, port=configs['port'],
             suffix=f"sca/{agent_id}/checks/{policy_id}",
             token=token,
             options=(f"result={result}&" if result else "") +
@@ -104,12 +105,12 @@ get list of all the cis policy checks, returns list of objects
 def get_agent_sca_database(
         agent_id:str,
 
-        url:str=api_url,
-        port:int=port,
+        url:str=configs['api_url'],
+        port:int=configs['port'],
         token:str=token 
         ) -> list[dict]:
     """
 get the sca database from agent, returns list of object
     """
-    return get_(url=url, port=port, suffix=f"sca/{agent_id}", token=token)
+    return get_(url=url, port=configs['port'], suffix=f"sca/{agent_id}", token=token)
 

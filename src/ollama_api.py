@@ -3,16 +3,16 @@ import urllib3
 import json
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
-llm_model = "deepseek-r1:8b"
-ollama_api_url = "10.0.3.230"
-port = 11434
+import tomllib
 
+with open("../config.toml", "rb") as config_file:
+    configs = tomllib.load(config_file)['ollama']
 
 def ollama_post_(
         data:   dict,
         suffix: str,
-        url:    str = ollama_api_url,
-        port:   int = port
+        url:    str = configs['ollama_api_url'],
+        port:   int = configs['port'],
         ):
 
     _url = f"http://{url}:{port}/{suffix}"
@@ -38,7 +38,7 @@ def invoke(
     if stream:
         print("stream!")
 
-        response = ollama_post_({ "model": llm_model, "prompt": prompt,\
+        response = ollama_post_({ "model": configs['llm_model'], "prompt": prompt,\
         "context": context or [], "stream": stream, }, "api/generate") 
 
         chunkies = ""
@@ -56,7 +56,7 @@ def invoke(
 
     else:
         return ollama_post_({
-            "model": llm_model,
+            "model": configs['llm_model'],
             "prompt": prompt,
             "context": context or [],
             "stream": stream,

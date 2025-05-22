@@ -2,6 +2,7 @@
 from src.main import *
 from pprint import pprint
 import argparse
+import tomllib
 
 def validate_id(value):
     if value is not None:

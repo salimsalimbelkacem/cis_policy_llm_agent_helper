@@ -14,9 +14,10 @@ def main():
     list_subparsers.add_parser('agents')
 
     policy_checks_parser = list_subparsers.add_parser('policyChecks')
-    policy_checks_parser.add_argument('arg1', type=str)
-    policy_checks_parser.add_argument('arg2', type=str)
-
+    policy_checks_parser.add_argument( '--agentId',  required=True, type=str)
+    policy_checks_parser.add_argument('--policyId',  required=True, type=str)
+    policy_checks_parser.add_argument(      '--id', required=False, type=str)
+    policy_checks_parser.add_argument(  '--result', required=False, type=str)
 
     args = parser.parse_args()
 
@@ -25,7 +26,10 @@ def main():
             pprint(wazuh_api.get_agents())
             print("")
         elif args.list_type == 'policyChecks':
-            result = wazuh_api.get_policy_checks(args.arg1, args.arg2, select="id,title,result")
+            result = wazuh_api.get_policy_checks(
+                    args.agentId, args.policyId,
+                    id=args.id, result=args.result
+                    )
             for policy in result:
                 print(f"{policy['id']} [{policy['result']}] {policy['title']}")
             print("")

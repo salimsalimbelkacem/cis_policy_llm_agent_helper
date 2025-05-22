@@ -1,8 +1,7 @@
 import requests
-import urllib3
 import json
+import urllib3
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
-
 import tomllib
 
 with open("./config.toml", "rb") as config_file:

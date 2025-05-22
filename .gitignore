@@ -1,0 +1,3 @@
+config.toml
+chroma_db/
+.venv/

@@ -2,11 +2,6 @@ import wazuh_api
 import ollama_api
 import raaaaag
 
-
-# def filter_policy_checks(agent_id:str, policy_id:str) -> list[dict]:
-#     return [ elem for elem in wazuh_api.get_policy_checks( agent_id, policy_id ) if elem["result"]!="passed" ]
-
-
 def generate_from_one_policy_checks(policy_check:dict,policy_id):
     print("semantic search extraction")
     context = raaaaag.semantic_search(
@@ -18,8 +13,6 @@ def generate_from_one_policy_checks(policy_check:dict,policy_id):
                 f"{policy_check}\ncontext: {context}"
 
     response = ollama_api.invoke(prompt)
-
-    # print(response['response'].split("</think>")[1])
 
     raaaaag.store_message("remidiation response", prompt, response['response'].split("</think>")[1])
     return response

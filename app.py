@@ -47,7 +47,6 @@ def main():
     policy_checks_gen.add_argument('--policyId', required=True, type=str)
     policy_checks_gen.add_argument('--id', required=False, type=str)
     policy_checks_gen.add_argument('--result', required=False, type=str)
-    policy_checks_gen.add_argument('--stream', required=False, type=str_to_bool)
 
     args = parser.parse_args()
 

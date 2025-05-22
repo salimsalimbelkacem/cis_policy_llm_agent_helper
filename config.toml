@@ -1,6 +1,10 @@
 [wazuh]
-api_url = "10.0.3.230"
-username = "wazuh-wui"
-password = "Oe9lSJE4kNjs9aBV*dADDkNoArmE+rIz"
-port = 55000
+api_url =  # URL string
+username = # USERNAME string
+password = # PASSWORD string
+port =     # PORT NUMBER int
 
+[ollama]
+ollama_api_url = # URL string
+llm_model_name = # MODEL NAME string
+port = # PORT NUMBER string

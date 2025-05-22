@@ -4,7 +4,7 @@ import urllib3
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 import tomllib
 
-with open("../config.toml", "rb") as config_file:
+with open("./config.toml", "rb") as config_file:
     configs = tomllib.load(config_file)['wazuh']
 
 

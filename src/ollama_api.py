@@ -5,7 +5,7 @@ urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 import tomllib
 
-with open("../config.toml", "rb") as config_file:
+with open("./config.toml", "rb") as config_file:
     configs = tomllib.load(config_file)['ollama']
 
 def ollama_post_(
@@ -38,7 +38,7 @@ def invoke(
     if stream:
         print("stream!")
 
-        response = ollama_post_({ "model": configs['llm_model'], "prompt": prompt,\
+        response = ollama_post_({ "model": configs['llm_model_name'], "prompt": prompt,\
         "context": context or [], "stream": stream, }, "api/generate") 
 
         chunkies = ""
@@ -56,7 +56,7 @@ def invoke(
 
     else:
         return ollama_post_({
-            "model": configs['llm_model'],
+            "model": configs['llm_model_name'],
             "prompt": prompt,
             "context": context or [],
             "stream": stream,

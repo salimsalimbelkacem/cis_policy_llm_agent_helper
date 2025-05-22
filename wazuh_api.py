@@ -7,7 +7,6 @@ api_url  = "10.0.3.230"
 username = "wazuh-wui"
 password = "Oe9lSJE4kNjs9aBV*dADDkNoArmE+rIz"
 port     = 55000
-token = ""
 
 def post_authenticate(
         username:str=username,
@@ -26,9 +25,7 @@ send post request for authentication, returns string token
         print("Authentication failed:", response.text)
         return ""
 
-def authenticate():
-    token = post_authenticate()
-    # print(token)
+token = post_authenticate()
 
 def get_(
         suffix:str,
@@ -113,3 +110,4 @@ def get_agent_sca_database(
 get the sca database from agent, returns list of object
     """
     return get_(url=url, port=port, suffix=f"sca/{agent_id}", token=token)
+

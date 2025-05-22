@@ -3,8 +3,6 @@ from main import wazuh_api
 import argparse
 from pprint import pprint
 
-wazuh_api.token = wazuh_api.post_authenticate()
-
 def main():
     # Initialize the parser
     parser = argparse.ArgumentParser(prog="prog")

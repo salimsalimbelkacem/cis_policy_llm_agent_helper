@@ -20,7 +20,7 @@ def ollama_post_(
         return response
     else:
         print("request failed:", response.text)
-        return None
+        return response
 
 
 def invoke(
@@ -28,29 +28,29 @@ def invoke(
         context:	list | None = None,
         stream:		bool = False,
 
-        # suffix:		str = "",
-        # system:		str = "",
-        # template:	str = "",
-        # options:	dict | None = None,
-        # how do i insert context
-        # format:		str = "",
-        # keep_alive:	str = "5m",
+        # suffix:str = "", system:str = "",
+        # template:str = "", options:dict | None = None,
+        # format:str = "", keep_alive:str = "5m",
         ):
 
     print("generating")
-    return ollama_post_({
-        "model": llm_model,
-        "prompt": prompt,
-        "context": context or [],
-        "stream": stream,
+    if not stream:
+        return ollama_post_({
+            "model": llm_model,
+            "prompt": prompt,
+            "context": context or [],
+            "stream": stream,
+            # "suffix": suffix, "options": options or {},
+            # "system": system, "keep_alive": keep_alive,
+            # "template": template, "format": format,
+            }, "api/generate").json()
+    else:
+        response = ollama_post_({ "model": llm_model, "prompt": prompt,\
+        "context": context or [], "stream": stream, }, "api/generate") 
 
-        # "suffix": suffix,
-        # "format": format,
-        # "options": options or {},
-        # "system": system,
-        # "template": template,
-        # "keep_alive": keep_alive,
-        }, "api/generate").json()
+        for line in response.iter_lines():
+            if line:
+                print(line)
 
 
 import json

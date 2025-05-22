@@ -7,7 +7,7 @@ api_url  = "10.0.3.230"
 username = "wazuh-wui"
 password = "Oe9lSJE4kNjs9aBV*dADDkNoArmE+rIz"
 port     = 55000
-token    = ""
+token = ""
 
 def post_authenticate(
         username:str=username,
@@ -28,6 +28,7 @@ send post request for authentication, returns string token
 
 def authenticate():
     token = post_authenticate()
+    # print(token)
 
 def get_(
         suffix:str,

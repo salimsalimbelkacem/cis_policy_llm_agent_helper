@@ -1,5 +1,6 @@
 import requests
 import urllib3
+import json
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 llm_model = "deepseek-r1:8b"
@@ -36,13 +37,23 @@ def invoke(
     print("generating")
     if stream:
         print("stream!")
+
         response = ollama_post_({ "model": llm_model, "prompt": prompt,\
         "context": context or [], "stream": stream, }, "api/generate") 
 
+        chunkies = ""
+        last_obj:dict={}
+
         for line in response.iter_lines():
-            print("hmmmm!")
             if line:
-                print(line)
+                decoded = json.loads(line.decode('utf-8'))
+                print(decoded["response"])
+                chunkies += decoded["response"]
+                last_obj = decoded
+
+        last_obj["response"] = chunkies        
+        return last_obj
+
     else:
         return ollama_post_({
             "model": llm_model,

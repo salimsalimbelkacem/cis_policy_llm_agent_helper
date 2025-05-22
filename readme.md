@@ -1,6 +1,6 @@
 # CIS remediation helper powered by deepseek and wazuh
 
-## dependencies
+## instalations and dependencies
 you need to install ollama (somewhere in your network) and pull an llm model and the `nomic-embed-text` embedding model from there
 ```bash
 curl -fsSL https://ollama.com/install.sh | sh && ollama pull deepseek-r1:8b && ollama pull nomic-embed-text
@@ -10,6 +10,21 @@ you then need to deploy wazuh (also somewhere in your network), you can refer to
 then you need to install the python dependency:
 ```bash
 python -m venv .venv && ./.venv/bin/pip install chromadb
+```
+
+## configuration
+you need to create a file named `config.toml` in the root directory. should look like this
+```toml
+[wazuh]
+api_url = ""     # The base URL of your Wazuh API (e.g., "https://wazuh.example.com")
+username = ""    # Your Wazuh API username
+password = ""    # Your Wazuh API password
+port = 55000     # The port your Wazuh API is running on
+
+[ollama]
+ollama_api_url = ""  # The base URL of the Ollama API (e.g., "http://localhost:11434")
+llm_model = ""       # The name of the language model to use (e.g., "llama3")
+port = 11434         # The port the Ollama service is running on
 ```
 
 ## usage

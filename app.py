@@ -1,5 +1,5 @@
 #!./.venv/bin/python3
-from ./src/main import *
+from src.main import *
 from pprint import pprint
 import argparse
 
@@ -35,9 +35,10 @@ def main():
 
     
     from_parser = subparsers.add_parser('generate', help='Generate data from sources')
-    policy_checks_gen.add_argument('--host', required=True,  type=str)
-    policy_checks_gen.add_argument('--model', required=True, type=str)
-    policy_checks_gen.add_argument('--port', required=True,  type=int)
+    from_parser.add_argument('--host', required=False,  type=str)
+    from_parser.add_argument('--model', required=False, type=str)
+    from_parser.add_argument('--port', required=False,  type=int)
+
     from_subparsers = from_parser.add_subparsers(dest="generate_source")
 
     policy_checks_gen = from_subparsers.add_parser('policyChecks', help='Generate from policy checks')

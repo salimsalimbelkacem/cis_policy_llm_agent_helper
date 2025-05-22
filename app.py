@@ -1,5 +1,5 @@
 #!./.venv/bin/python3
-from main import *
+from main import wazuh_api
 import argparse
 from pprint import pprint
 

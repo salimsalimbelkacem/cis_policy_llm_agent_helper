@@ -83,18 +83,10 @@ def semantic_search(
             )
 
     return [
-            {
-                "text": doc,
-                "distance": float(dist),
-                "timestamp": meta["timestamp"],
-                "metadata": {k:v for k,v in meta.items() if k != "timestamp"}
-                }
-            for doc, meta, dist in zip(
+            {"text": doc,}
+            for doc in zip(
                 results["documents"][0],
-                results["metadatas"][0],
-                results["distances"][0]
                 )
-            if dist >= min_similarity
             ]
 
 import os

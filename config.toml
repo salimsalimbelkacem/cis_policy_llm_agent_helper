@@ -1,0 +1,6 @@
+[wazuh]
+api_url = "10.0.3.230"
+username = "wazuh-wui"
+password = "Oe9lSJE4kNjs9aBV*dADDkNoArmE+rIz"
+port = 55000
+

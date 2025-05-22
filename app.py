@@ -1,5 +1,5 @@
 #!./.venv/bin/python3
-from main import *
+from ./src/main import *
 from pprint import pprint
 import argparse
 
@@ -35,6 +35,9 @@ def main():
 
     
     from_parser = subparsers.add_parser('generate', help='Generate data from sources')
+    policy_checks_gen.add_argument('--host', required=True,  type=str)
+    policy_checks_gen.add_argument('--model', required=True, type=str)
+    policy_checks_gen.add_argument('--port', required=True,  type=int)
     from_subparsers = from_parser.add_subparsers(dest="generate_source")
 
     policy_checks_gen = from_subparsers.add_parser('policyChecks', help='Generate from policy checks')
@@ -53,16 +56,15 @@ def main():
 
         elif args.list_type == 'policyChecks':
             result = wazuh_api.get_policy_checks( args.agentId, args.policyId, id=args.id, result=args.result)
-
             for policy in result:
                 print(f"{policy['id']} [{policy['result']}] {policy['title']}")
             print("")
+
     elif args.command == 'generate':
         if args.generate_source == 'policyChecks':
-            result = generate_from_all_policy_checks(args.agentId, args.policyId, id=args.id, result=args.result, stream=args.stream)
+            result = generate_from_all_policy_checks(args.agentId, args.policyId, id=args.id, result=args.result)
 
 
-    # if args.command == 'list':
 
 if __name__ == "__main__":
     main()

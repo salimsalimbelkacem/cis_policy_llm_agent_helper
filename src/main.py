@@ -7,16 +7,17 @@ import raaaaag
 #     return [ elem for elem in wazuh_api.get_policy_checks( agent_id, policy_id ) if elem["result"]!="passed" ]
 
 
-def generate_from_one_policy_checks(policy_check:dict,stream:bool=False):
+def generate_from_one_policy_checks(policy_check:dict,policy_id):
     print("semantic search extraction")
-    context = raaaaag.retrieve_for_llm (
-            policy_check["title"] + policy_check["policy_id"]
+    context = raaaaag.semantic_search(
+            policy_check["title"] + policy_id,
+            top_k = 1,
             )
 
-    prompt = f"explain what does this policy check mean in simple words then give me detailed steps to follow that are required for remidiation in bullet points" +\
-    f"{policy_check}\ncontext: {context}"
+    prompt = "give me technical steps to follow that are required for remidiation, with few details"+\
+                f"{policy_check}\ncontext: {context}"
 
-    response = ollama_api.invoke(prompt, stream=stream)
+    response = ollama_api.invoke(prompt)
 
     # print(response['response'].split("</think>")[1])
 
@@ -25,14 +26,13 @@ def generate_from_one_policy_checks(policy_check:dict,stream:bool=False):
 
 
 def generate_from_all_policy_checks(agent_id:str, policy_id:str,
-                                    result: str|None = None,
-                                    select: str|None = None,
+                                    result: str|None = "failed",
+                                    select: str|None = "id,remediation,result,title",
                                     id:     str|None = None,
                                     options:str|None = None,
-                                    stream:bool = False,
                                     ):
 
-    policy_checks = wazuh_api.get_policy_checks(agent_id,          policy_id, 
+    policy_checks = wazuh_api.get_policy_checks(agent_id,          policy_id,
                                                 result=result, select=select,
                                                 id=id,        options=options)
     file = open("policy_checks_output", "a")
@@ -42,9 +42,9 @@ def generate_from_all_policy_checks(agent_id:str, policy_id:str,
         print(title)
 
         file.write(title+"\n")
-        file.write(f"{generate_from_one_policy_checks(check, stream)['response'].split('</think>')[1]}" + "\n\n------\n")
+        file.write(f"{generate_from_one_policy_checks(check, policy_id)['response'].split('</think>')[1]}" + "\n\n------\n")
 
-    open("policy_checks_output", "a")
+    file.close()
 
 
 # def generate_from_agents_list():

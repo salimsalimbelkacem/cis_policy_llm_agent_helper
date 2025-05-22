@@ -51,8 +51,9 @@ def get_agents(
         port:int=port,
         token:str=token,
 
-        status:str|None = None,
-        options:str|None = None,
+         status:str|None=None,
+         select:str|None="id,ip,name,os.name,os.version,status",
+        options:str|None=None,
         ) -> list[dict]:
     """
 gets list of agents with informations, returns list of objects
@@ -63,6 +64,7 @@ gets list of agents with informations, returns list of objects
             suffix="agents",
             token=token,
             options=(f"status={status}&" if status else "") +
+                    (f"select={select}&" if select else "") +
                     (options or "")
                 )
 

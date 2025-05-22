@@ -47,7 +47,7 @@ def invoke(
         for line in response.iter_lines():
             if line:
                 decoded = json.loads(line.decode('utf-8'))
-                print(decoded["response"])
+                print(decoded["response"], end="")
                 chunkies += decoded["response"]
                 last_obj = decoded
 

@@ -34,7 +34,16 @@ def invoke(
         ):
 
     print("generating")
-    if not stream:
+    if stream:
+        print("stream!")
+        response = ollama_post_({ "model": llm_model, "prompt": prompt,\
+        "context": context or [], "stream": stream, }, "api/generate") 
+
+        for line in response.iter_lines():
+            print("hmmmm!")
+            if line:
+                print(line)
+    else:
         return ollama_post_({
             "model": llm_model,
             "prompt": prompt,
@@ -44,13 +53,6 @@ def invoke(
             # "system": system, "keep_alive": keep_alive,
             # "template": template, "format": format,
             }, "api/generate").json()
-    else:
-        response = ollama_post_({ "model": llm_model, "prompt": prompt,\
-        "context": context or [], "stream": stream, }, "api/generate") 
-
-        for line in response.iter_lines():
-            if line:
-                print(line)
 
 
 import json

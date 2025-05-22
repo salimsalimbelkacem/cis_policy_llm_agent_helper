@@ -7,7 +7,7 @@ import raaaaag
 #     return [ elem for elem in wazuh_api.get_policy_checks( agent_id, policy_id ) if elem["result"]!="passed" ]
 
 
-def generate_from_one_policy_checks(policy_check:dict):
+def generate_from_one_policy_checks(policy_check:dict,stream:bool=False):
     print("semantic search extraction")
     context = raaaaag.retrieve_for_llm (
             policy_check["title"] + policy_check["policy_id"]
@@ -16,16 +16,25 @@ def generate_from_one_policy_checks(policy_check:dict):
     prompt = f"explain what does this policy check mean in simple words then give me detailed steps to follow that are required for remidiation in bullet points" +\
     f"{policy_check}\ncontext: {context}"
 
-    response = ollama_api.invoke(prompt)
+    response = ollama_api.invoke(prompt, stream=stream)
 
-    print(response['response'].split("</think>")[1])
+    # print(response['response'].split("</think>")[1])
 
     raaaaag.store_message("remidiation response", prompt, response['response'].split("</think>")[1])
     return response
 
 
-def generate_from_all_policy_checks(agent_id:str="003", policy_id:str="cis_win2022"):
-    policy_checks = wazuh_api.get_policy_checks(agent_id, policy_id)
+def generate_from_all_policy_checks(agent_id:str, policy_id:str,
+                                    result: str|None = None,
+                                    select: str|None = None,
+                                    id:     str|None = None,
+                                    options:str|None = None,
+                                    stream:bool = False,
+                                    ):
+
+    policy_checks = wazuh_api.get_policy_checks(agent_id,          policy_id, 
+                                                result=result, select=select,
+                                                id=id,        options=options)
     file = open("policy_checks_output", "a")
 
     for check in policy_checks:
@@ -33,7 +42,7 @@ def generate_from_all_policy_checks(agent_id:str="003", policy_id:str="cis_win20
         print(title)
 
         file.write(title+"\n")
-        file.write(f"{generate_from_one_policy_checks(check)['response'].split('</think>')[1]}" + "\n\n------\n")
+        file.write(f"{generate_from_one_policy_checks(check, stream)['response'].split('</think>')[1]}" + "\n\n------\n")
 
     open("policy_checks_output", "a")
 

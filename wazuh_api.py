@@ -7,8 +7,9 @@ api_url  = "10.0.3.230"
 username = "wazuh-wui"
 password = "Oe9lSJE4kNjs9aBV*dADDkNoArmE+rIz"
 port     = 55000
+token    = ""
 
-def authenticate(
+def post_authenticate(
         username:str=username,
         password:str=password,
         url:str=api_url,
@@ -25,8 +26,8 @@ send post request for authentication, returns string token
         print("Authentication failed:", response.text)
         return ""
 
-token = authenticate()
-
+def authenticate():
+    token = post_authenticate()
 
 def get_(
         suffix:str,
@@ -83,12 +84,11 @@ get list of all the cis policy checks, returns list of objects
 :param agent_id:  required, Agent ID. All possible values from 000 onwards
 :param policy_id: required, Filter by policy id
 
-:param     id: Filter by check id
-:param result: Filter by result
-:param select: Select which fields to return (separated by comma). Use '.' for nested fields.
-               For example, '{field1: field2}' may be selected with 'field1.field2'
-
-additional options from the [wazuh api documentation](https://documentation.wazuh.com/current/user-manual/api/reference.html#operation/api.controllers.sca_controller.get_sca_checks) can be added in the `options` parameter separated with `&`
+:param     id:  Filter by check id
+:param result:  Filter by result
+:param select:  Select which fields to return (separated by comma). Use '.' for nested fields.
+                For example, '{field1: field2}' may be selected with 'field1.field2'
+:param options: additional options from the [wazuh api documentation](https://documentation.wazuh.com/current/user-manual/api/reference.html#operation/api.controllers.sca_controller.get_sca_checks) can be added separated with `&`
     """
     return get_(
             url=url, port=port,
@@ -112,4 +112,3 @@ def get_agent_sca_database(
 get the sca database from agent, returns list of object
     """
     return get_(url=url, port=port, suffix=f"sca/{agent_id}", token=token)
-

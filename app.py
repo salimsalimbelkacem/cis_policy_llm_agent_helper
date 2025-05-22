@@ -1,5 +1,6 @@
 #!./.venv/bin/python3
-import main
-from sys import argv
+from main import *
+import argparse
 
+wazuh_api.authenticate()
 

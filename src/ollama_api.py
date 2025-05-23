@@ -65,25 +65,25 @@ def invoke(
             }, "api/generate").json()
 
 
-import json
-import os
-
-
-def generate(prompt:str):
-
-    if os.path.exists(".context"):
-        file = open(mode="r", file=".context")
-        context = '{"context":'+file.read()+'}'
-        file.close()
-
-    else:
-        context = '{"context":[]}'
-
-    response = invoke(prompt, context = json.loads(context)["context"])
-
-    file = open(mode="w", file=".context")
-    file.write(f"{response['context']}")
-    file.close()
-
-    return response
-
+# import json
+# import os
+#
+#
+# def generate(prompt:str):
+#
+#     if os.path.exists(".context"):
+#         file = open(mode="r", file=".context")
+#         context = '{"context":'+file.read()+'}'
+#         file.close()
+#
+#     else:
+#         context = '{"context":[]}'
+#
+#     response = invoke(prompt, context = json.loads(context)["context"])
+#
+#     file = open(mode="w", file=".context")
+#     file.write(f"{response['context']}")
+#     file.close()
+#
+#     return response
+#

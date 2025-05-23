@@ -10,12 +10,12 @@ def validate_id(value):
             raise argparse.ArgumentTypeError("ID must be exactly 3 numeric characters.")
     return value
 
-def str_to_bool(value):
-    if value.lower() in ('true', 'y', 'yes'):
-        return True
-    elif value.lower() in ('false', 'n', 'no'):
-        return False
-    raise argparse.ArgumentTypeError("Stream must be a boolean (true/false)")
+# def str_to_bool(value):
+#     if value.lower() in ('true', 'y', 'yes'):
+#         return True
+#     elif value.lower() in ('false', 'n', 'no'):
+#         return False
+#     raise argparse.ArgumentTypeError("Stream must be a boolean (true/false)")
 
 def main():
     parser = argparse.ArgumentParser(prog="prog")

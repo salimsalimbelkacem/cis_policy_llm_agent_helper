@@ -7,11 +7,15 @@ import tomllib
 with open("./config.toml", "rb") as config_file:
     configs = tomllib.load(config_file)['ollama']
 
+ollama_api_url = configs['ollama_api_url']
+llm_model_name = configs['llm_model_name']
+port = configs['port']          
+
 def ollama_post_(
         data:   dict,
         suffix: str,
-        url:    str = configs['ollama_api_url'],
-        port:   int = configs['port'],
+        url:    str = ollama_api_url,
+        port:   int = port,
         ):
 
     _url = f"http://{url}:{port}/{suffix}"
@@ -37,7 +41,7 @@ def invoke(
     if stream:
         print("stream!")
 
-        response = ollama_post_({ "model": configs['llm_model_name'], "prompt": prompt,\
+        response = ollama_post_({ "model": llm_model_name, "prompt": prompt,\
         "context": context or [], "stream": stream, }, "api/generate") 
 
         chunkies = ""
@@ -55,7 +59,7 @@ def invoke(
 
     else:
         return ollama_post_({
-            "model": configs['llm_model_name'],
+            "model": llm_model_name,
             "prompt": prompt,
             "context": context or [],
             "stream": stream,

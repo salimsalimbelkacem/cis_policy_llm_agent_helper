@@ -2,3 +2,4 @@ config.toml
 chroma_db/
 .venv/
 __pycache__/
+src/feeding_data/

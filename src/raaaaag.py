@@ -25,7 +25,7 @@ def test_chroma_conectivity(client):
     except Exception as e:
         raise ConnectionError(f"Failed to initialize ChromaDB: {str(e)}")
 
-def init_chroma(persist_dir="./chroma_db"):
+def init_chroma(persist_dir="./.chroma_db"):
     client = chromadb.PersistentClient(path=persist_dir)
 
     test_chroma_conectivity(client)

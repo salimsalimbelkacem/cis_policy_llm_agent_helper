@@ -16,14 +16,14 @@ python -m venv .venv && ./.venv/bin/pip install chromadb
 you need to create a file named `config.toml` in the root directory. should look like this
 ```toml
 [wazuh]
-api_url = ""     # The base URL of your Wazuh API (e.g., "https://wazuh.example.com")
+api_url = ""     # The base URL of your Wazuh API
 username = ""    # Your Wazuh API username
 password = ""    # Your Wazuh API password
 port = 55000     # The port your Wazuh API is running on
 
 [ollama]
-ollama_api_url = ""  # The base URL of the Ollama API (e.g., "http://localhost:11434")
-llm_model = ""       # The name of the language model to use (e.g., "llama3")
+ollama_api_url = ""  # The base URL of the Ollama API
+llm_model = ""       # The name of the language model to use
 port = 11434         # The port the Ollama service is running on
 ```
 

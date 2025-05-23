@@ -22,7 +22,7 @@ password = ""    # Your Wazuh API password
 port = 55000     # The port your Wazuh API is running on
 
 [ollama]
-ollama_api_url = ""  # The base URL of the Ollama API
+api_url = ""  # The base URL of the Ollama API
 llm_model = ""       # The name of the language model to use
 port = 11434         # The port the Ollama service is running on
 ```

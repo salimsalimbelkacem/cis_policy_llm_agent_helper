@@ -7,14 +7,14 @@ import tomllib
 with open("./config.toml", "rb") as config_file:
     configs = tomllib.load(config_file)['ollama']
 
-ollama_api_url = configs['ollama_api_url']
+api_url = configs['api_url']
 llm_model_name = configs['llm_model_name']
 port = configs['port']          
 
 def ollama_post_(
         data:   dict,
         suffix: str,
-        url:    str = ollama_api_url,
+        url:    str = api_url,
         port:   int = port,
         ):
 

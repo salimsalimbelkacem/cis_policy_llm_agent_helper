@@ -5,6 +5,6 @@ password = # PASSWORD string
 port =     # PORT NUMBER int
 
 [ollama]
-ollama_api_url = # URL string
+api_url = # URL string
 llm_model_name = # MODEL NAME string
 port = # PORT NUMBER string

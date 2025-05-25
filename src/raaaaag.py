@@ -1,5 +1,5 @@
 import chromadb
-import ollama_api
+import src.ollama_api as ollama_api
 import time
 
 from chromadb import EmbeddingFunction, Embeddings, Documents
@@ -92,40 +92,35 @@ def semantic_search(
 import os
 from pathlib import Path
 
-def load_files(directory: str):
-    file_data = []
-    for filepath in Path(directory).glob("*"):
-        with open(filepath, "r", encoding="utf-8") as f:
-            file_data.append({
-                    "text": f.read(),
-                    "filename": filepath.name,
-                    "filetype": filepath.suffix[1:]
-                })
-    return file_data
+def load_file(filepath: str):
+    with open(filepath, "r", encoding="utf-8") as f:
+        return {
+            "text": f.read(),
+            "filename": Path(filepath).name,
+            "filetype": Path(filepath).suffix[1:]
+        }
 
-def chunk_text(text: str, chunk_size: int = 1000):
+def chunk_text(text: str, chunk_size: int = 200):
     words = text.split()
     for i in range(0, len(words), chunk_size):
         yield " ".join(words[i:i + chunk_size])
 
-def ingest_files( directory:str, collection=collection):
-    print("loading files...")
-    files = load_files(directory)
-
+def ingest_file(filepath: str, collection=collection):
+    print("loading file...")
+    file = load_file(filepath)
 
     print("chunking or whatever...")
-    for file in files:
-        for i, chunk in enumerate(chunk_text(file["text"])):
-            print(f"chunk {i} :P")
-            collection.add(
-                        documents=[chunk],
-                        metadatas=[{
-                                "filename": file["filename"],
-                                "chunk_num": i,
-                                "filetype": file["filetype"]
-                            }],
-                        ids=[f"{file['filename']}_{i}"]
-                    )
+    for i, chunk in enumerate(chunk_text(file["text"])):
+        print(f"chunk {i} :P")
+        collection.add(
+            documents=[chunk],
+            metadatas=[{
+                "filename": file["filename"],
+                "chunk_num": i,
+                "filetype": file["filetype"]
+            }],
+            ids=[f"{file['filename']}_{i}"]
+        )
     print("done :P")
 
 def retrieve_for_llm(

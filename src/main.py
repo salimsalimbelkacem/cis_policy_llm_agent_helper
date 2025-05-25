@@ -1,6 +1,6 @@
-import wazuh_api
-import ollama_api
-import raaaaag
+import src.wazuh_api as wazuh_api
+import src.ollama_api as ollama_api
+import src.raaaaag as raaaaag
 
 def generate_from_one_policy_checks(policy_check:dict,policy_id):
     print("semantic search extraction")
@@ -9,12 +9,14 @@ def generate_from_one_policy_checks(policy_check:dict,policy_id):
             top_k = 1,
             )
 
-    prompt = "give me technical steps to follow that are required for remidiation, with few details"+\
-                f"{policy_check}\ncontext: {context}"
+    prompt= ["give me technical steps to follow that are required for remidiation, with few details",
+                f"\nstart\n{policy_check}\nend\ncontext:\n start\n{context}\nend"]
 
-    response = ollama_api.invoke(prompt)
+    response = ollama_api.invoke(prompt[0]+prompt[1])
 
-    raaaaag.store_message("remidiation response", prompt, response['response'].split("</think>")[1])
+    print(response['response'].split("</think>")[1])
+
+    raaaaag.store_message("remidiation response", prompt[0], response['response'].split("</think>")[1])
     return response
 
 

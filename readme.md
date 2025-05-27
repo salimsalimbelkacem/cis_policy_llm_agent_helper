@@ -39,7 +39,7 @@ to generate remediation advice from the llm:
 ./app.py generate policyChecks  --agentId {STRING} --policyId {STRING} [--id {STRING}] [--result {STRING}]
 ```
 
-to generate text from the llm:
+to store files for the RAG (feed):
 ```bash
 ./app.py feed {FILE}
 ```

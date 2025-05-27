@@ -31,10 +31,15 @@ port = 11434   # The port the Ollama service is running on
 to simply fetch data from the wazuh api:
 ```bash
 ./app.py list agents
-./app.py list policyChecks --agentId STRING --policyId STRING [--id STRING] [--result STRING]
+./app.py list policyChecks --agentId {STRING} --policyId {STRING} [--id {STRING}] [--result {STRING}]
+```
+
+to generate remediation advice from the llm:
+```bash
+./app.py generate policyChecks  --agentId {STRING} --policyId {STRING} [--id {STRING}] [--result {STRING}]
 ```
 
 to generate text from the llm:
 ```bash
-./app.py generate policyChecks  --agentId STRING --policyId STRING [--id STRING] [--result STRING]
+./app.py feed {FILE}
 ```

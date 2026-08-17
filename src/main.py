@@ -9,7 +9,7 @@ def generate_from_one_policy_checks(policy_check:dict,policy_id):
             top_k = 1,
             )
 
-    prompt= ["give me technical steps to follow that are required for remidiation, with few details",
+    prompt = ["give me technical steps to follow that are required for remidiation, with few details",
                 f"\nstart\n{policy_check}\nend\ncontext:\n start\n{context}\nend"]
 
     response = ollama_api.invoke(prompt[0]+prompt[1])

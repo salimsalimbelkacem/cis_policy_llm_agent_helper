@@ -1,0 +1,57 @@
+
+[27050] Configure 'Network access: Named Pipes that can be accessed anonymously' (DC only).
+
+
+**Remediation Steps:**
+
+1. **Configure Named Pipes via Group Policy (GP):**
+   - Navigate to the appropriate UI path in the Group Policy Management Console:
+     ```
+     Computer Configuration > Policies > Windows Settings > Security Settings > Local Policies > Security Options > Network access: Named Pipes that can be accessed anonymously.
+     ```
+   - Set the policy as required, considering it's applicable only to Domain Controllers.
+
+2. **Oppose CIS Recommendations:**
+   - **AllowStoringPasswordsForTasks:** 
+     - Set this setting to `true` if necessary for task scheduler functionality, despite opposing CIS recommendations.
+   - **AllowAccessToSMBWithDifferentSPN:** 
+     - Set this to `true` if SMB access is required without strict SPN validation, noting potential connection issues.
+
+3. **Evaluate and Document:**
+   - Assess the impact of these changes on your organization's security posture.
+   - Document decisions made against CIS recommendations, as it may affect audits or risk assessments.
+
+**Note:** Implementing these settings should be done with careful consideration of their implications for system functionality and security.
+
+------
+
+[27050] Configure 'Network access: Named Pipes that can be accessed anonymously' (DC only).
+
+[27050] Configure 'Network access: Named Pipes that can be accessed anonymously' (DC only).
+
+
+To remediate the issue of 'Network access: Named Pipes that can be accessed anonymously' being enabled on Domain Controllers, follow these steps:
+
+1. **Open Group Policy Management Editor**: On a Domain Controller with RSAT installed, launch GPMC.msc.
+
+2. **Navigate to Security Settings**: In the Group Policy Management Editor, traverse through:
+   - Computer Configuration
+   - Policies
+   - Windows Settings
+   - Security Settings
+   - Local Policies
+   - Security Options
+
+3. **Locate and Modify Named Pipes Setting**: Find 'Network access: Named Pipes that can be accessed anonymously' in the list of security options.
+
+4. **Disable the Setting**: Right-click the setting and select 'Disabled' to enforce the recommended configuration.
+
+5. **Apply Group Policy**: After making changes, ensure policies are applied by closing the editor and selecting 'All' or specific target machines.
+
+6. **Verify Application and Impact**: Check if any applications rely on this setting being enabled. If necessary, consider exceptions for specific policies or user groups.
+
+7. **Confirm Enforcement**: Use tools like gpresult or rsop to ensure the policy is correctly applied across Domain Controllers.
+
+By following these steps, the named pipes will be properly secured as per best practices.
+
+------

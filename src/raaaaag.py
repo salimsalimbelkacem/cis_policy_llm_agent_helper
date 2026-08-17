@@ -92,7 +92,7 @@ def semantic_search(
 import os
 from pathlib import Path
 
-def load_file(filepath: str):
+def load_file(filepath:str):
     with open(filepath, "r", encoding="utf-8") as f:
         return {
             "text": f.read(),
@@ -100,12 +100,12 @@ def load_file(filepath: str):
             "filetype": Path(filepath).suffix[1:]
         }
 
-def chunk_text(text: str, chunk_size: int = 200):
+def chunk_text(text:str, chunk_size:int = 200):
     words = text.split()
     for i in range(0, len(words), chunk_size):
         yield " ".join(words[i:i + chunk_size])
 
-def ingest_file(filepath: str, collection=collection):
+def ingest_file(filepath:str, collection=collection):
     print("loading file...")
     file = load_file(filepath)
 
@@ -126,7 +126,7 @@ def ingest_file(filepath: str, collection=collection):
 def retrieve_for_llm(
         query:str,
         collection = collection,
-        top_k: int = 1
+        top_k:int = 1
         ):
 
     results = collection.query(
